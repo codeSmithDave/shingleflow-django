@@ -17,6 +17,13 @@ class Inquiry(models.Model):
   on_delete=models.PROTECT,
   related_name="inquiries",
   )
+ client = models.ForeignKey(
+  Client,
+  on_delete=models.PROTECT,
+  related_name="inquiries",
+  null=True,
+  blank=True,
+ )
  first_name = models.CharField(max_length=50)
  last_name = models.CharField(max_length=50)
  email = models.EmailField(max_length=250)
