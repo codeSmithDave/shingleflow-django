@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Inquiry
+from ...models import Inquiry
 
 class InquirySerializer(serializers.ModelSerializer):
  class Meta:
@@ -10,4 +10,4 @@ class InquirySerializer(serializers.ModelSerializer):
    "job_type", "scope_description", "status",
    "created_at", "updated_at",
   ]
-  read_only_fields = ["created_at", "updated_at"]
+  read_only_fields = ["user", "client", "created_at", "updated_at"]
