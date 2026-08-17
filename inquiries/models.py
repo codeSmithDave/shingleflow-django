@@ -42,7 +42,7 @@ class Inquiry(models.Model):
   max_length=16,
   choices=Project.JobType.choices
  )
- scrope_description = models.TextField()
+ scope_description = models.TextField()
  status = models.CharField(
   max_length=9,
   choices=InquiryStatus.choices,
