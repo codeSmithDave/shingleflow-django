@@ -41,24 +41,24 @@ class ProjectViewSet(viewsets.ModelViewSet):
   )
   serializer.save(client = client)
   
- class WorkDayViewSet(viewsets.ModelViewSet):
-  serializer_class = WorkDaySerializer
-  http_method_names = ['get', 'post', 'patch', 'head', 'options']
-  # TODO: no auth backend wired up yet
-  permission_classes = [IsAuthenticated]
+class WorkDayViewSet(viewsets.ModelViewSet):
+ serializer_class = WorkDaySerializer
+ http_method_names = ['get', 'post', 'patch', 'head', 'options']
+ # TODO: no auth backend wired up yet
+ permission_classes = [IsAuthenticated]
+ 
+ def get_queryset(self):
+  queryset = WorkDay.objects.filter(project__client__user = self.request.user)
   
-  def get_queryset(self):
-   queryset = WorkDay.objects.filter(project__client__user = self.request.user)
-   
-   if('project_pk' in self.kwargs):
-    queryset = queryset.filter(project__pk = self.kwargs['project_pk'])
-   
-   return queryset
+  if('project_pk' in self.kwargs):
+   queryset = queryset.filter(project__pk = self.kwargs['project_pk'])
   
-  def perform_create(self, serializer):
-   project = Project.objects.get(
-    client__user = self.request.user,
-    pk = self.kwargs['project_pk']
-   )
-   
-   serializer.save(project = project)
+  return queryset
+ 
+ def perform_create(self, serializer):
+  project = Project.objects.get(
+   client__user = self.request.user,
+   pk = self.kwargs['project_pk']
+  )
+  
+  serializer.save(project = project)
