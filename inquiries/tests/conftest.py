@@ -24,3 +24,6 @@ def make_inquiry():
 @pytest.fixture
 def api_url_v1_inquiries():
  return '/api/v1/inquiries/'
+
+def api_url_v1_inquiries_convert(api_url_v1_inquiries, pk):
+ return f"{api_url_v1_inquiries}{pk}/convert/"
