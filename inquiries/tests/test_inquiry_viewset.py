@@ -137,3 +137,20 @@ def test_inquiry_convert_returns_404_for_other_users_inquiry(
  response = api_client.post(url)
  
  assert response.status_code == 404
+ 
+def test_inquiry_convert_sets_project_description(
+ user_a,
+ make_inquiry,
+ api_client,
+ api_url_v1_inquiries,
+):
+ description = "this is a description"
+ inquiry = make_inquiry(user_a, scope_description=description)
+ url = api_url_v1_inquiries_convert(api_url_v1_inquiries, inquiry.pk)
+ 
+ api_client.force_authenticate(user_a)
+ response = api_client.post(url)
+ 
+ assert response.status_code == 201
+ project = Project.objects.get(client=response.data['id'])
+ assert project.description == description

@@ -26,6 +26,7 @@ def convert_inquiry_to_client(inquiry):
   Project.objects.create(
    client=client,
    job_type=inquiry.job_type,
+   description=inquiry.scope_description,
   )
 
   inquiry.status = Inquiry.InquiryStatus.CONVERTED

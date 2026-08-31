@@ -5,7 +5,7 @@ class ClientSerializer(serializers.ModelSerializer):
  class Meta:
   model = Client
   fields = ["id", "user", "first_name", "last_name", "email", "phone",
-   "address", "city", "province", "postal_code",
+   "address", "city", "province", "postal_code", "notes",
    "created_at", "updated_at",]
   read_only_fields = ["user", "created_at", "updated_at"]
   
@@ -18,7 +18,7 @@ class ProjectSerializer(serializers.ModelSerializer):
  class Meta:
   model = Project
   fields = ["id", "client", "job_type", "status",
-   "deposit_amount", "final_payment",
+   "deposit_amount", "final_payment", "description", "notes",
    "created_at", "updated_at",]
   read_only_fields = ["client", "created_at", "updated_at"]
   
