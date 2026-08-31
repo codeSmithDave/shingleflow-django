@@ -39,7 +39,7 @@ class Client(models.Model):
   max_length=7,
   validators=[postal_code_validator]
  )
- 
+ notes = models.TextField(blank=True, default='')
  created_at = models.DateTimeField(auto_now_add=True)
  updated_at = models.DateTimeField(auto_now=True)
  
@@ -82,6 +82,8 @@ class Project(models.Model):
   null=True,
   blank=True,
  )
+ description = models.TextField(blank=True, default='')
+ notes = models.TextField(blank=True,default='')
  created_at = models.DateTimeField(auto_now_add=True)
  updated_at = models.DateTimeField(auto_now=True)
  

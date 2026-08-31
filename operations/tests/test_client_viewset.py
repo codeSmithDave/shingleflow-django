@@ -1,5 +1,5 @@
 import pytest
-from operations.models import Client
+# from operations.models import Client
 
 def test_user_can_create_client(
  user_a,
@@ -10,14 +10,14 @@ def test_user_can_create_client(
  api_client.force_authenticate(user=user_a)
 
  response = api_client.post(
-     api_url_v1_clients,
-     data=client_api_payload,
+  api_url_v1_clients,
+  data=client_api_payload,
+  format='json'
  )
 
  assert response.status_code == 201
  assert response.data['first_name'] == 'Australian'
  assert response.data['user'] == user_a.pk
-
 
 def test_user_cannot_see_other_users_clients(
  user_a,
@@ -33,7 +33,6 @@ def test_user_cannot_see_other_users_clients(
 
  assert response.status_code == 404
 
-
 def test_user_can_see_own_clients(
  user_a,
  api_client,
@@ -48,3 +47,22 @@ def test_user_can_see_own_clients(
 
  assert response.status_code == 200
  assert len(response.data) == 2
+ 
+def test_client_notes_update_via_patch(
+ user_a,
+ api_client,
+ api_url_v1_clients,
+ make_client,
+):
+ notes = 'this is a custom note'
+ payload = {
+  'notes': notes
+ }
+ client = make_client(user_a)
+ url = f"{api_url_v1_clients}{client.pk}/"
+ 
+ api_client.force_authenticate(user_a)
+ response = api_client.patch(path=url, data=payload, format='json')
+ 
+ assert response.status_code == 200
+ assert response.data['notes'] == notes
