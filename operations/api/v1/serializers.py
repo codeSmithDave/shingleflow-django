@@ -29,6 +29,6 @@ class WorkDaySerializer(serializers.ModelSerializer):
  class Meta:
   model = WorkDay
   fields = ["id", "project", "status", "scheduled_date", "rescheduled_date",
-   "effective_date", "is_overdue",
+   "start_time", "end_time", "effective_date", "is_overdue",
    "created_at", "updated_at",]
   read_only_fields = ["effective_date", "is_overdue", "project", "created_at", "updated_at"]
