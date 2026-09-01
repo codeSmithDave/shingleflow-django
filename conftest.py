@@ -1,7 +1,9 @@
 import pytest
+from datetime import time
 from rest_framework.test import APIClient
 from django.contrib.auth import get_user_model
 from operations.models import Project, Client
+from profiles.models import UserSchedule
 
 User = get_user_model()
 
@@ -41,6 +43,17 @@ def make_project():
   defaults.update(overrides)
   return Project.objects.create(client=client, **defaults)
  return _make_project
+
+@pytest.fixture
+def make_user_schedule():
+ def _make_user_schedule(user, **overrides):
+  defaults = {
+   'default_start_time': time(9, 0),
+   'default_end_time': time(17, 0),
+  }
+  defaults.update(overrides)
+  return UserSchedule.objects.create(user=user, **defaults)
+ return _make_user_schedule
 
 @pytest.fixture
 def api_client():

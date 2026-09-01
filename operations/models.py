@@ -132,6 +132,8 @@ class WorkDay(models.Model):
  )
  scheduled_date = models.DateField()
  rescheduled_date = models.DateField(null=True, blank=True)
+ start_time = models.TimeField(null=True, blank=True)
+ end_time = models.TimeField(null=True, blank=True)
  created_at = models.DateTimeField(auto_now_add=True)
  updated_at = models.DateTimeField(auto_now=True)
 
@@ -145,6 +147,14 @@ class WorkDay(models.Model):
    self.status in (self.Status.SCHEDULED, self.Status.RESCHEDULED)
    and self.effective_date < timezone.now().date()
   )
+  
+ def save(self, *args, **kwargs):
+  schedule = self.project.client.user.schedule
+  if not self.start_time:
+   self.start_time = schedule.default_start_time
+  if not self.end_time:
+   self.end_time = schedule.default_end_time
+  super().save(*args, **kwargs)
   
  def __str__(self):
   return f"{self.project}: {self.status.capitalize()} - {self.effective_date}"
