@@ -1,5 +1,6 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from operations.models import Client, Project, WorkDay
 from .serializers import ClientSerializer, ProjectSerializer, WorkDaySerializer
 
@@ -54,11 +55,43 @@ class WorkDayViewSet(viewsets.ModelViewSet):
    queryset = queryset.filter(project__pk = self.kwargs['project_pk'])
   
   return queryset
- 
- def perform_create(self, serializer):
+
+ def create(self, request, *args, **kwargs):
+  # Overrides default create() to support bulk WorkDay creation: accepts a single
+  # object or a list, validating/saving each independently so partial batches succeed.
+  if 'project_pk' not in self.kwargs:
+   return Response(
+    {'detail': 'WorkDay creation must be scoped to a project.'},
+    status=status.HTTP_400_BAD_REQUEST,
+   )
+
   project = Project.objects.get(
-   client__user = self.request.user,
-   pk = self.kwargs['project_pk']
+   client__user=self.request.user,
+   pk=self.kwargs['project_pk']
   )
   
-  serializer.save(project = project)
+  items = request.data if isinstance(request.data, list) else [request.data]
+  
+  created = []
+  errors = []
+  
+  for index, item in enumerate(items):
+   serializer = self.get_serializer(data=item)
+   if serializer.is_valid():
+    serializer.save(project=project)
+    created.append(serializer.data)
+   else:
+    errors.append(
+     {
+      'index': index,
+      'detail': serializer.errors,
+     }
+    )
+   
+  return Response(
+   {
+    'created': created,
+    'errors': errors,
+   },
+   status = status.HTTP_201_CREATED if created else status.HTTP_400_BAD_REQUEST,
+  )
