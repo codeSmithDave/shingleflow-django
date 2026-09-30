@@ -3,6 +3,20 @@ from django.conf import settings
 from django.db import models
 from datetime import time
 
+class UserProfile(models.Model):
+ user = models.OneToOneField(
+  settings.AUTH_USER_MODEL,
+  on_delete=models.CASCADE,
+  related_name="profile"
+ )
+ # Not collected at signup, so optional until the user sets it.
+ brand_name = models.CharField(max_length=100, blank=True, null=True)
+ created_at = models.DateTimeField(auto_now_add=True)
+ updated_at = models.DateTimeField(auto_now=True)
+
+ def __str__(self):
+  return f"{self.user}: {self.brand_name or 'no brand name'}"
+
 class UserSchedule(models.Model):
  user = models.OneToOneField(
   settings.AUTH_USER_MODEL,
