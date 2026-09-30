@@ -9,11 +9,11 @@ User = get_user_model()
 
 @pytest.fixture
 def user_a(db):
- return User.objects.create_user(username='user_a', password='123123')
+ return User.objects.create_user(email='user_a@example.com', password='123123', auth_id='auth-user-a')
 
 @pytest.fixture
 def user_b(db):
- return User.objects.create_user(username='user_b', password='123123')
+ return User.objects.create_user(email='user_b@example.com', password='123123', auth_id='auth-user-b')
 
 @pytest.fixture
 def make_client():

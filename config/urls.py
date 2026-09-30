@@ -16,10 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from drf_spectacular.views import SpectacularAPIView
+from .permissions import HasSchemaAPIKey
 
 urlpatterns = [
  path('admin/', admin.site.urls),
  path("api/v1/", include("inquiries.api.v1.urls")),
  path("api/v1/", include("operations.api.v1.urls")),
  path("api/v1/", include("profiles.api.v1.urls")),
+ path(
+  'api/schema/',
+  SpectacularAPIView.as_view(permission_classes=[HasSchemaAPIKey]),
+  name='schema',
+  ),
 ]
